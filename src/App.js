@@ -1,9 +1,13 @@
 import './index.css';
 import Employee from './component/Employee';
 import {useState} from "react";
-import { v4 as uuidv4 } from "uuid"; 
+
+/**
+ * Main App component that manages employee data
+ * Displays a list of employees with editable information
+ * @returns {JSX.Element} The main application component
+ */
 function App() {
-  const [role, setRole] = useState("Dev");
   const [employees, setEmployees] = useState([
     {
       id: 1,
@@ -50,9 +54,15 @@ function App() {
 
     ]);
 
+  /**
+   * Updates an employee's information
+   * @param {number} id - The unique identifier of the employee
+   * @param {string} newName - The new name for the employee
+   * @param {string} newRole - The new role for the employee
+   */
   function updateEmployee(id, newName, newRole){
     const updatedEmployee = employees.map((employee) => {
-      if(id == employee.id) {
+      if(id === employee.id) {
         return  {...employee, name: newName, role: newRole};
       }
       return employee;
@@ -68,10 +78,6 @@ function App() {
       {
        showEmployees ? (
       <>
-         <input type="text" onChange={ (e) => {
-            setRole(e.target.value);
-            }} 
-          />
           <div className='flex flex-wrap justify-center'>
             {
             employees.map((employee) => {
