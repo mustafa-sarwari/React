@@ -1,7 +1,15 @@
 import { useState } from 'react';
-import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
+/**
+ * EditEmployee component that provides a modal to edit employee details
+ * @param {Object} props - Component props
+ * @param {number} props.id - Employee ID
+ * @param {string} props.name - Current employee name
+ * @param {string} props.role - Current employee role
+ * @param {Function} props.updateEmployee - Function to update employee data
+ * @returns {JSX.Element} Edit employee modal component
+ */
 function EditEmployee(props) {
   const [name, setName] = useState(props.name);
   const [role, setRole] = useState(props.role);
