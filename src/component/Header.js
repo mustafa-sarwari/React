@@ -12,7 +12,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function Header() {
+export default function Header(props) {
   return (
     <Disclosure
       as="nav"
@@ -122,6 +122,7 @@ export default function Header() {
           ))}
         </div>
       </DisclosurePanel>
+      {props.children}
     </Disclosure>
   )
 }
