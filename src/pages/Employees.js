@@ -3,11 +3,8 @@ import Employee from '../component/Employee';
 import {useState} from "react";
 import { v4 as uuidv4 } from "uuid";
 import AddEmployee from '../component/AddEmployee';
-import EditEmployee from '../component/EditEmployee';
-import Header from "../component/Header";
 
 function Employees() {
-  const [role, setRole] = useState("Dev");
   const [employees, setEmployees] = useState([
     {
       id: 1,
@@ -56,7 +53,7 @@ function Employees() {
 
   function updateEmployee(id, newName, newRole){
     const updatedEmployee = employees.map((employee) => {
-      if(id == employee.id) {
+      if(id === employee.id) {
         return  {...employee, name: newName, role: newRole};
       }
       return employee;
@@ -84,12 +81,6 @@ function Employees() {
           <div className='flex flex-wrap justify-center my-2'>
             {
             employees.map((employee) => {
-              const editEmployee = <EditEmployee
-              id = {employee.id}
-              name = {employee.name}
-              role = {employee.role}
-              updateEmployee = {updateEmployee}
-               />
               return (
               <Employee
               key = {employee.id}
@@ -97,7 +88,7 @@ function Employees() {
               name = {employee.name} 
               role = {employee.role}
               img = {employee.img}
-              editEmployee = {editEmployee}
+              updateEmployee = {updateEmployee}
               /> );
             })
             }
