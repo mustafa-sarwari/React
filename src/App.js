@@ -6,11 +6,16 @@ import AddEmployee from './component/AddEmployee';
 import EditEmployee from './component/EditEmployee';
 import Header from "./component/Header";
 import Employees from './pages/Employees';
+import { BrowserRouter, Routers, Route, Routes } from 'react-router-dom';
 
 function App() {
   return (
     <Header>
-      <Employees />
+      <BrowserRouter>
+        <Routes>
+            <Route path = "/" element = {<Employees/>} />
+        </Routes>
+      </BrowserRouter>
     </Header>
   );
 }
