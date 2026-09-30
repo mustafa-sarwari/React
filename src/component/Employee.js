@@ -1,28 +1,9 @@
-import EditEmployee from "./EditEmployee";
-function Employee(props){
-    return (
-    <div className="min-w-[350px] max-w-[350px] m-2 py-8 px-8 max-w-sm space-y-2 bg-white rounded-xl shadow-lg sm:py-4 sm:flex sm:items-center sm:space-y-0 sm:gap-x-6">
-        
-        <img className="object-cover rounded-full h-[100px] w-[100px] block mx-auto h-24 rounded-full sm:mx-0 sm:shrink-0" 
-        src={props.img} />
-
-        <div className="text-center space-y-2 sm:text-left">
-                <div className="space-y-0.5">
-                    <p className="text-lg text-black font-semibold">
-                    {props.name}
-                    </p>
-                    <p className="text-slate-500 font-medium">
-                    {props.role}
-                    </p>
-                </div>
-                <EditEmployee 
-                id = {props.id}
-                name ={props.name} 
-                role = {props.role}
-                updateEmployee = {props.updateEmployee}/>
-        </div>
-    </div>
-    )
+import EditEmployee from './EditEmployee';
+export default function Employee({ name, role, img, onSave, onDelete, busy }) {
+  return <article className="w-full max-w-sm p-4 bg-white rounded-xl shadow">
+    <img className="object-cover rounded-full h-24 w-24" src={img} alt={name} onError={event => { event.currentTarget.onerror = null; event.currentTarget.src = '/photo/img (1).jpg'; }} />
+    <h2 className="text-lg">{name}</h2><p>{role}</p>
+    <EditEmployee name={name} role={role} img={img} onSave={onSave} busy={busy} />
+    <button type="button" disabled={busy} className="border rounded px-3 py-2 ml-2" onClick={() => { if (window.confirm(`Delete ${name}?`)) onDelete().catch(() => {}); }}>Delete</button>
+  </article>;
 }
-
-export default Employee;

@@ -23,7 +23,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "start:api": "node server/index.cjs",
+    "test:api": "node --test server/api.test.cjs"
   },
   "eslintConfig": {
     "extends": [
@@ -45,5 +47,9 @@
   },
   "devDependencies": {
     "tailwindcss": "^3.4.18"
-  }
+  },
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "proxy": "http://127.0.0.1:4000"
 }
