@@ -1,10 +1,10 @@
 # Employee Management System
 
-A modern, responsive employee management application built with React that allows you to manage employee information with an intuitive user interface.
+A frontend employee management application built with React that allows you to manage employee information with an intuitive user interface.
 
 ## About the Project
 
-This is a full-featured employee management system that provides a clean and user-friendly interface for managing employee data. The application displays employee cards with their information and allows for easy addition and editing of employee records through modal dialogs.
+This is a frontend employee management project that provides a clean and user-friendly interface for managing employee data. The application displays employee cards with their information and allows for easy addition and editing of employee records through modal dialogs.
 
 ## Features
 
@@ -46,14 +46,14 @@ This is a full-featured employee management system that provides a clean and use
 ## Getting Started
 
 ### Prerequisites
-- Node.js (v14 or higher)
+- A current Node.js LTS version compatible with the installed dependencies
 - npm or yarn package manager
 
 ### Installation
 
 1. Clone the repository
 ```bash
-git clone <repository-url>
+git clone https://github.com/mustafa-sarwari/React.git
 cd React
 ```
 
@@ -107,4 +107,8 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
 
-This project is open source and available for educational purposes.
+No license file is currently included. Repository visibility alone does not grant reuse rights.
+
+## Project scope
+
+The checked-in application demonstrates React interface development. A backend API, database, and production authentication are not included in this repository. Testing libraries are dependencies; their presence alone does not establish passing test coverage.
