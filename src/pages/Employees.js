@@ -1,114 +1,53 @@
-import '../index.css';
+import { useEffect, useState } from 'react';
 import Employee from '../component/Employee';
-import {useState} from "react";
-import { v4 as uuidv4 } from "uuid";
 import AddEmployee from '../component/AddEmployee';
-import EditEmployee from '../component/EditEmployee';
-import Header from "../component/Header";
-
-function Employees() {
-  const [role, setRole] = useState("Dev");
-  const [employees, setEmployees] = useState([
-    {
-      id: 1,
-      name: "Sarah",
-      role:"CEO",
-      img:"../../photo/img (1).jpg"
-    },
-    {
-      id: 2,
-      name:"Deedee",
-      role:"CTO",
-      img:"../../photo/img (2).jpg"
-    },
-    {
-      id: 3,
-      name:"Johon",
-      role:"OTO",
-      img:"../../photo/img (3).jpg"
-    },
-    {
-      id: 4,
-      name: "Ana", 
-      role: "Director",
-      img:"../../photo/img (4).jpg"
-    },
-    {
-      id: 5,
-      name: "Fatima",
-      role:"General Manager",
-      img:"../../photo/img (1).webp"
-    },
-    {
-      id: 6,
-      name: "Martin",
-      role: "General Product Manger",
-      img: "../../photo/img (2).webp"
-    },
-    {
-      id: 7,
-      name: "Ellie",
-      role:"General Operation Manager", 
-      img:"../../photo/img (3).webp"
-    }
-
-    ]);
-
-  function updateEmployee(id, newName, newRole){
-    const updatedEmployee = employees.map((employee) => {
-      if(id == employee.id) {
-        return  {...employee, name: newName, role: newRole};
-      }
-      return employee;
-    });
-    setEmployees(updatedEmployee);
-  }
-
-  function newEmployee(name, role, img){
-    const newEmployee = {
-      id: uuidv4(),
-      name: name,
-      role: role,
-      img: img,
-    }
-    setEmployees([...employees, newEmployee])
-  }
-
-  const showEmployees = true;
-
-  return (
-    <div className="App bg-gray-300 min-h-screen ">
-      {
-       showEmployees ? (
-      <>
-          <div className='flex flex-wrap justify-center my-2'>
-            {
-            employees.map((employee) => {
-              const editEmployee = <EditEmployee
-              id = {employee.id}
-              name = {employee.name}
-              role = {employee.role}
-              updateEmployee = {updateEmployee}
-               />
-              return (
-              <Employee
-              key = {employee.id}
-              id= {employee.id}
-              name = {employee.name} 
-              role = {employee.role}
-              img = {employee.img}
-              editEmployee = {editEmployee}
-              /> );
-            })
-            }
-          </div>
-          <AddEmployee  newEmployee = {newEmployee}/>
-      </>
-      ):(
-           <p>You cannot see all employees</p>
-      )}  
-    </div>
-  );
+import '../index.css';
+async function request(path = '', options = {}) {
+  const response = await fetch('/api/employees' + path, { ...options, headers: { 'Content-Type': 'application/json' } });
+  const body = await response.json();
+  if (!response.ok) throw new Error(body.error || 'Unable to save employee.');
+  return body;
 }
-
-export default Employees;
+export default function Employees() {
+  const [employees, setEmployees] = useState([]);
+  const [query, setQuery] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState('');
+  useEffect(() => {
+    let active = true;
+    request().then(rows => { if (active) setEmployees(rows); })
+      .catch(error => { if (active) setError(error.message); })
+      .finally(() => { if (active) setLoading(false); });
+    return () => { active = false; };
+  }, []);
+  async function mutate(action) {
+    setBusy(true); setError('');
+    try { await action(); }
+    catch (error) { setError(error.message); throw error; }
+    finally { setBusy(false); }
+  }
+  const add = values => mutate(async () => {
+    const row = await request('', { method: 'POST', body: JSON.stringify(values) });
+    setEmployees(rows => [row, ...rows]);
+  });
+  const edit = (id, values) => mutate(async () => {
+    const updated = await request('/' + id, { method: 'PATCH', body: JSON.stringify(values) });
+    setEmployees(rows => rows.map(row => row.id === id ? updated : row));
+  });
+  const remove = id => mutate(async () => {
+    await request('/' + id, { method: 'DELETE' }); setEmployees(rows => rows.filter(row => row.id !== id));
+  });
+  const visible = employees.filter(row => `${row.name} ${row.role}`.toLowerCase().includes(query.toLowerCase()));
+  return <main className="bg-gray-100 min-h-screen p-4">
+    <label htmlFor="employee-search">Search name or role</label>
+    <input id="employee-search" className="block border rounded p-2 w-full max-w-lg" value={query} onChange={event => setQuery(event.target.value)} />
+    {error && <p role="alert">{error} Start the API on port 4000 if it is unavailable.</p>}
+    {loading ? <p role="status">Loading employees…</p> : <>
+      <p>{visible.length} employees</p>
+      <AddEmployee onSave={add} busy={busy} />
+      <div className="flex flex-wrap gap-4 mt-4">{visible.map(row => <Employee key={row.id} {...row} onSave={values => edit(row.id, values)} onDelete={() => remove(row.id)} busy={busy} />)}</div>
+      {!visible.length && <p>No employees found. Add an employee to get started.</p>}
+    </>}
+  </main>;
+}

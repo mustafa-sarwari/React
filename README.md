@@ -1,114 +1,44 @@
-# Employee Management System
+# Employee directory — React and Node.js
 
-A frontend employee management application built with React that allows you to manage employee information with an intuitive user interface.
+Manage employee profiles with account login, persistent CRUD, department fields, and search.
 
-## About the Project
+**Frontend:** React 19, React Router, Bootstrap. **Backend:** Node.js 24, HTTP API, SQLite, and account sessions.
 
-This is a frontend employee management project that provides a clean and user-friendly interface for managing employee data. The application displays employee cards with their information and allows for easy addition and editing of employee records through modal dialogs.
+Employee edits update the existing record rather than creating duplicates. Development requests use a declared proxy dependency, and the production server serves the React build alongside the API.
 
-## Features
+## Run locally
 
-- **Employee Directory**: Display all employees in a responsive card-based layout
-- **Add New Employees**: Add new employees with name, role, and image information
-- **Edit Employee Information**: Update existing employee details through an intuitive modal interface
-- **Responsive Design**: Fully responsive UI that works on desktop, tablet, and mobile devices
-- **Modern Navigation**: Clean navigation bar with dropdown menus
-- **Route Management**: Single-page application with React Router for smooth navigation
-
-## Technologies Used
-
-### Languages
-- **JavaScript (ES6+)**: Primary programming language
-- **HTML5**: Structure and markup
-- **CSS3**: Styling and layout
-
-### Libraries and Frameworks
-- **React (v19.2.0)**: Frontend library for building user interfaces
-- **React DOM (v19.2.0)**: React rendering for web applications
-- **React Router DOM (v7.9.6)**: Routing and navigation
-- **Tailwind CSS (v3.4.18)**: Utility-first CSS framework for styling
-- **Bootstrap (v5.3.8)**: CSS framework for responsive design
-- **React Bootstrap (v2.10.10)**: Bootstrap components built with React
-
-### UI Components
-- **Headless UI (v2.2.9)**: Unstyled, accessible UI components
-- **Heroicons (v2.2.0)**: Beautiful hand-crafted SVG icons
-
-### Utilities
-- **UUID (v13.0.0)**: Generation of unique identifiers for employees
-- **Web Vitals (v2.1.4)**: Measuring web performance metrics
-
-### Testing
-- **React Testing Library (v16.3.0)**: Testing utilities for React components
-- **Jest DOM (v6.9.1)**: Custom Jest matchers for DOM testing
-- **User Event (v13.5.0)**: Simulating user interactions in tests
-
-## Getting Started
-
-### Prerequisites
-- A current Node.js LTS version compatible with the installed dependencies
-- npm or yarn package manager
-
-### Installation
-
-1. Clone the repository
 ```bash
-git clone https://github.com/mustafa-sarwari/React.git
-cd React
+npm ci
+npm run build
+npm run start:api
 ```
 
-2. Install dependencies
-```bash
-npm install
-```
+Open <http://localhost:4000>, choose **Sign in · Account**, and create your local owner account. Open **My workspace** to use the stored workflows. A second account gets member access and its own private data.
 
-3. Start the development server
-```bash
-npm start
-```
+## Full-stack implementation
 
-The application will open in your browser at [http://localhost:3000](http://localhost:3000)
+- Email/password accounts with salted scrypt hashes, rotated HttpOnly sessions, expiry, and owner/member roles.
+- SQLite-backed `employees` workflows with access checks and server-side validation.
+- Connected account screens for stored records, search, paging, and activity; resource permissions control available actions.
+- Transactional writes, retry keys, version-aware editing for mutable records, and bounded API requests.
 
-## Available Scripts
+[Backend routes, storage design, and access rules](docs/backend.md) · [Workspace preview](docs/workspace-preview.jpg)
 
-### `npm start`
-Runs the app in development mode. The page will reload when you make changes.
+![Account workspace](docs/workspace-preview.jpg)
 
-### `npm test`
-Launches the test runner in interactive watch mode.
+## Verification
 
-### `npm run build`
-Builds the app for production to the `build` folder. The build is optimized for best performance.
+`npm run test:api` passes **3 backend tests**, including password hashing, session rotation/expiry, restart persistence, access control, validation, and the repository workflow. `npm ci` and the production build also pass.
 
-### `npm run eject`
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+The main account and resource flow passed browser checks at 375px and 1280px with no page JavaScript errors or horizontal overflow in those flows. [GitHub Actions](.github/workflows/fullstack.yml) runs the backend suite and frontend build on pushes and pull requests.
 
-Ejects from Create React App configuration for full control over build tools and configurations.
+## Development
 
-## Project Structure
+Run `npm run start:api` and `npm start` in separate terminals. The development proxy sends API and account-workspace requests to port 4000. For the single-server production demo, build once and open port 4000.
 
-```
-src/
-├── component/          # Reusable React components
-│   ├── Employee.js    # Employee card component
-│   ├── AddEmployee.js # Add employee modal
-│   ├── EditEmployee.js # Edit employee modal
-│   └── Header.js      # Navigation header
-├── pages/             # Page components
-│   └── Employees.js   # Main employees page
-├── App.js             # Main application component
-├── index.js           # Application entry point
-└── index.css          # Global styles
-```
+## Project context
 
-## Contributing
+[Mustafa Sarwari](https://github.com/mustafa-sarwari) — junior full-stack developer developing deeper skills in frontend integration, server validation, authentication, persistence, and automated verification. The shared HTTP/workspace foundation is reused across these portfolio projects; the workflows above show each project’s domain behavior. 
 
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## License
-
-No license file is currently included. Repository visibility alone does not grant reuse rights.
-
-## Project scope
-
-The checked-in application demonstrates React interface development. A backend API, database, and production authentication are not included in this repository. Testing libraries are dependencies; their presence alone does not establish passing test coverage.
+Static previews require the Node service for backend features. Orders and messages are local demonstrations; payment processing and email delivery are outside their implemented scope.
