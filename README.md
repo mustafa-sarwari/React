@@ -1,44 +1,53 @@
-# Employee directory — React and Node.js
+# Employee Directory — React profiles with persistent editing
 
-Manage employee profiles with account login, persistent CRUD, department fields, and search.
+A small employee directory that lets a signed-in user create, search, edit and remove stored profiles. The main React interface and the account workspace use the same employee API.
 
-**Frontend:** React 19, React Router, Bootstrap. **Backend:** Node.js 24, HTTP API, SQLite, and account sessions.
+**Demo status:** Local full-stack app; no cloud deployment required.
 
-Employee edits update the existing record rather than creating duplicates. Development requests use a declared proxy dependency, and the production server serves the React build alongside the API.
+![Main application interface](docs/screenshots/main.png)
+
+![Saved result of the workflow](docs/screenshots/saved.png)
+
+[Watch the short local demo](docs/demos/walkthrough.mp4) · [Repeat the demo](docs/DEMO.md)
+
+## Main workflow
+
+Add an employee → search by name or role → edit the existing profile → refresh to verify the change.
+
+## Architecture and decisions
+
+React 19, React Router and Bootstrap, built with Create React App → Node.js 24 HTTP API → SQLite employee records and account sessions.
+
+- Editing uses PATCH on the existing employee ID instead of creating a duplicate.
+- The React screen searches names and roles; the workspace also exposes department and email fields.
+- The production server serves the React build and API from one origin. Development uses the declared proxy dependency.
+
+Accounts use salted scrypt password hashes and expiring HttpOnly sessions. The shared account/API foundation is reused across these portfolio applications; the domain behavior above is specific to this project.
 
 ## Run locally
 
-```bash
+Use Node.js 24. From this repository in PowerShell:
+
+```powershell
 npm ci
 npm run build
 npm run start:api
 ```
 
-Open <http://localhost:4000>, choose **Sign in · Account**, and create your local owner account. Open **My workspace** to use the stored workflows. A second account gets member access and its own private data.
+Open http://localhost:4000. Choose **Sign in · Account**, then **Create an account**. Use a password of 12–128 characters. The first account receives owner access; later accounts receive member access. Saved local data lives in the ignored `.data/` directory.
 
-## Full-stack implementation
-
-- Email/password accounts with salted scrypt hashes, rotated HttpOnly sessions, expiry, and owner/member roles.
-- SQLite-backed `employees` workflows with access checks and server-side validation.
-- Connected account screens for stored records, search, paging, and activity; resource permissions control available actions.
-- Transactional writes, retry keys, version-aware editing for mutable records, and bounded API requests.
-
-[Backend routes, storage design, and access rules](docs/backend.md) · [Workspace preview](docs/workspace-preview.jpg)
-
-![Account workspace](docs/workspace-preview.jpg)
+For live frontend development, run `npm run start:api` and `npm start` in separate terminals.
 
 ## Verification
 
-`npm run test:api` passes **3 backend tests**, including password hashing, session rotation/expiry, restart persistence, access control, validation, and the repository workflow. `npm ci` and the production build also pass.
+```powershell
+npm run test:api
+```
 
-The main account and resource flow passed browser checks at 375px and 1280px with no page JavaScript errors or horizontal overflow in those flows. [GitHub Actions](.github/workflows/fullstack.yml) runs the backend suite and frontend build on pushes and pull requests.
+The backend suite exercises account security and the application’s domain workflow. CI also checks the frontend build. See [GitHub Actions](.github/workflows/fullstack.yml) and [backend reference](docs/backend.md). Capture details and their limits are recorded in [the demo guide](docs/DEMO.md).
 
-## Development
+## Limits
 
-Run `npm run start:api` and `npm start` in separate terminals. The development proxy sends API and account-workspace requests to port 4000. For the single-server production demo, build once and open port 4000.
+This is a portfolio directory, not an HR system. There is no payroll integration, invitation flow or organizational directory sync. Create React App is retained rather than presenting this as a newer Vite project.
 
-## Project context
-
-[Mustafa Sarwari](https://github.com/mustafa-sarwari) — junior full-stack developer developing deeper skills in frontend integration, server validation, authentication, persistence, and automated verification. The shared HTTP/workspace foundation is reused across these portfolio projects; the workflows above show each project’s domain behavior. 
-
-Static previews require the Node service for backend features. Orders and messages are local demonstrations; payment processing and email delivery are outside their implemented scope.
+Built and maintained by [Mustafa Sarwari](https://github.com/mustafa-sarwari). Existing source credits and licenses are preserved.
